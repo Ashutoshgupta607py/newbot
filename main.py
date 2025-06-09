@@ -3,7 +3,7 @@ import openai
 
 # ---------- CONFIG ----------
 st.set_page_config(layout="wide")
-openai.api_key = "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"
+openai.api_key = "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"
 openai.api_base = "https://openrouter.ai/api/v1"
 
 # ---------- Personality Setup ----------
