@@ -1,14 +1,10 @@
 import streamlit as st
-from openai import OpenAI
+import openai
 
 # ---------- CONFIG ----------
 st.set_page_config(layout="wide")
-
-# Initialize the OpenAI client (OpenRouter)
-client = OpenAI(
-    api_key="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",
-    base_url="https://openrouter.ai/api/v1"
-)
+openai.api_key = "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"
+openai.api_base = "https://openrouter.ai/api/v1"
 
 # ---------- Personality Setup ----------
 if "ai_personality" not in st.session_state:
@@ -45,7 +41,7 @@ if st.session_state.show_personality_input:
         st.session_state.show_personality_input = False
         st.rerun()
 
-# ---------- Chat History Display ----------
+# ---------- Display Chat ----------
 for msg in st.session_state.chat_history[1:]:  # skip system message
     if msg["role"] == "user":
         st.markdown(f"**You:** {msg['content']}")
@@ -79,11 +75,10 @@ st.markdown('</div>', unsafe_allow_html=True)
 if send and que:
     st.session_state.chat_history.append({"role": "user", "content": que})
 
-    response = client.chat.completions.create(
+    response = openai.ChatCompletion.create(
         model="mistralai/mistral-7b-instruct:free",
         messages=st.session_state.chat_history
     )
-
-    reply = response.choices[0].message.content
+    reply = response['choices'][0]['message']['content']
     st.session_state.chat_history.append({"role": "assistant", "content": reply})
     st.rerun()
